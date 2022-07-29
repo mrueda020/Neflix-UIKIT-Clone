@@ -9,7 +9,7 @@ import UIKit
 
 class HomeHeaderUIView: UIView {
     
-    private let hetoImageView: UIImageView = {
+    private let heroImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
@@ -65,7 +65,7 @@ class HomeHeaderUIView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(hetoImageView)
+        addSubview(heroImageView)
         addGradient()
         addSubview(playButton)
         addSubview(downloadButton)
@@ -74,7 +74,7 @@ class HomeHeaderUIView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        hetoImageView.frame = bounds
+        heroImageView.frame = bounds
     }
     
     required init?(coder: NSCoder) {

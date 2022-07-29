@@ -8,8 +8,8 @@
 import UIKit
 
 class HomeViewController: UIViewController {
-
-    let sectionTitles:[String] = ["Trending Movies","Popular","Trending TV","Upcoming Movies","Top Rated"]
+    
+    let sectionTitles:[String] = ["Trending Movies","Popular","Trending TV","Upcoming Movies","Top Rated","Test Section"]
     
     private let homeFeedTable: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
@@ -19,7 +19,7 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         view.backgroundColor = .systemBackground
         view.addSubview(homeFeedTable)
@@ -29,10 +29,23 @@ class HomeViewController: UIViewController {
         
         configureNavBar()
         
-        let headerView = HomeHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 450))
+        let headerView = HomeHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 325))
         
         homeFeedTable.tableHeaderView = headerView
-       
+        getTrendingMovies()
+    }
+    
+    
+    private func getTrendingMovies() {
+        APICaller.shared.getTrendingMovies  { results in
+            switch results {
+                case .success(let movies):
+                    print(movies)
+                case .failure(let error):
+                    print(error)
+            }
+            
+        }
     }
     
     private func configureNavBar() {
