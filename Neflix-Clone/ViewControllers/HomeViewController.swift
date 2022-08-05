@@ -9,7 +9,16 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
-    let sectionTitles:[String] = ["Trending Movies","Popular","Trending TV","Upcoming Movies","Top Rated","Test Section"]
+    enum Sections: Int  {
+        case TrendingMovies = 0
+        case NetflixOriginals = 1
+        case TopRatedMovies = 2
+        case UpcomingMovies = 3
+        case TopRatedTV = 4
+        
+    }
+    
+    let sectionTitles:[String] = ["Trending Movies","Netflix Originals","Top Rated Movies","Upcoming Movies","Top Rated TV"]
     
     private let homeFeedTable: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
@@ -32,21 +41,8 @@ class HomeViewController: UIViewController {
         let headerView = HomeHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 325))
         
         homeFeedTable.tableHeaderView = headerView
-        getTrendingMovies()
     }
     
-    
-    private func getTrendingMovies() {
-        APICaller.shared.getTrendingMovies  { results in
-            switch results {
-                case .success(let movies):
-                    print(movies)
-                case .failure(let error):
-                    print(error)
-            }
-            
-        }
-    }
     
     private func configureNavBar() {
         
@@ -86,6 +82,63 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CollectionViewTableViewCell.identifier, for: indexPath)  as? CollectionViewTableViewCell else {return UITableViewCell() }
+        
+        
+        switch indexPath.section {
+        case Sections.TrendingMovies.rawValue:
+            APICaller.shared.getTrendingMovies  { results in
+                switch results {
+                case .success(let movies):
+                    cell.configure(with: movies)
+                case .failure(let error):
+                    print(error)
+                }
+                
+            }
+        case Sections.NetflixOriginals.rawValue:
+            APICaller.shared.getNetflixOriginals { results in
+                switch results {
+                case .success(let movies):
+                    cell.configure(with: movies)
+                case .failure(let error):
+                    print(error)
+                }
+                
+            }
+        case Sections.TopRatedMovies.rawValue:
+            APICaller.shared.getTopRatedMovies { results in
+                switch results {
+                case .success(let movies):
+                    cell.configure(with: movies)
+                case .failure(let error):
+                    print(error)
+                }
+                
+            }
+        case Sections.UpcomingMovies.rawValue:
+            APICaller.shared.getUpcomingMovies { results in
+                switch results {
+                case .success(let movies):
+                    cell.configure(with: movies)
+                case .failure(let error):
+                    print(error)
+                }
+                
+            }
+        case Sections.TopRatedTV.rawValue:
+            APICaller.shared.getTopRatedTV { results in
+                switch results {
+                case .success(let movies):
+                    cell.configure(with: movies)
+                case .failure(let error):
+                    print(error)
+                }
+                
+            }
+        default:
+            cell.configure(with: [Movie]())
+        }
+        
         return cell
         
     }
@@ -107,6 +160,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         header.textLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
         header.textLabel?.frame = CGRect(x: header.bounds.origin.x + 20, y: header.bounds.origin.y, width: 100, height: header.bounds.height)
         header.textLabel?.textColor = .white
+        header.textLabel?.text = header.textLabel?.text?.capitalizeFirstLetter()
         
     }
     
